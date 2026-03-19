@@ -49,8 +49,8 @@ io.engine.use(sessionMiddleware);
 
 // Initialize services
 const imageGenerator = new ImageGenerator({
-  apiKey: config.gemini.apiKey,
-  dailyCapImages: config.gemini.dailyCapImages,
+  apiKey: config.falAi.apiKey,
+  dailyCapImages: config.falAi.dailyCapImages,
 });
 
 const socketHandler = new SocketHandler(io, imageGenerator);

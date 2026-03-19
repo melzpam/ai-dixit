@@ -6,7 +6,7 @@ Players join rooms, a storyteller gives an association word, everyone generates 
 ## Stack
 - **Backend:** Node.js + TypeScript + Socket.IO + Express
 - **Frontend:** Next.js + React + Tailwind CSS
-- **AI:** Google Vertex AI Imagen (image generation)
+- **AI:** fal.ai Flux Schnell (image generation)
 - **State:** In-memory (single process, v1)
 - **Hosting:** Fly.io
 - **Images:** JPEG base64 via WebSocket (no external storage for v1)

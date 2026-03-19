@@ -1,8 +1,7 @@
 import pLimit from "p-limit";
 
 const MAX_RETRIES = 2;
-const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta";
-const MODEL = "imagen-4.0-fast-generate-001";
+const FAL_AI_BASE = "https://fal.ai/api/v1/workflows/fal-ai/flux/schnell";
 
 export class ImageGenerator {
   private readonly apiKey: string;
@@ -65,41 +64,54 @@ export class ImageGenerator {
       );
 
       try {
-        const url = `${GEMINI_API_BASE}/models/${MODEL}:predict?key=${this.apiKey}`;
-
-        const response = await fetch(url, {
+        const response = await fetch(FAL_AI_BASE, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Key ${this.apiKey}`,
+          },
           body: JSON.stringify({
-            instances: [{ prompt }],
-            parameters: {
-              sampleCount: 1,
-              aspectRatio: "3:4",
-            },
+            prompt,
+            image_size: "portrait_4_3",
+            num_images: 1,
+            output_format: "jpeg",
           }),
         });
 
         if (!response.ok) {
           const errorBody = await response.text();
           throw new Error(
-            `Imagen API ${response.status}: ${errorBody.slice(0, 200)}`
+            `fal.ai API ${response.status}: ${errorBody.slice(0, 200)}`
           );
         }
 
         const data = await response.json();
-        const predictions = data?.predictions;
+        const images = data?.images;
 
-        if (!predictions || predictions.length === 0) {
-          throw new Error("No predictions in Imagen response");
+        // NSFW / content filter — empty images array, don't retry
+        if (!images || images.length === 0) {
+          console.log(
+            JSON.stringify({
+              event: "image_generation_content_filtered",
+              prompt: prompt.slice(0, 100),
+            })
+          );
+          return null;
         }
 
-        const base64 = predictions[0]?.bytesBase64Encoded as
-          | string
-          | undefined;
+        const imageUrl = images[0].url;
 
-        if (!base64) {
-          throw new Error("No base64 data in Imagen response");
+        // Download the image and convert to base64
+        const imgResponse = await fetch(imageUrl, {
+          signal: AbortSignal.timeout(10_000),
+        });
+
+        if (!imgResponse.ok) {
+          throw new Error(`Image download failed: ${imgResponse.status}`);
         }
+
+        const buffer = await imgResponse.arrayBuffer();
+        const base64 = Buffer.from(buffer).toString("base64");
 
         this.generationCount++;
         const durationMs = Date.now() - startMs;

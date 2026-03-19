@@ -8,8 +8,8 @@ export const config = {
   session: {
     secret: process.env.SESSION_SECRET ?? "dev-secret-change-in-production",
   },
-  gemini: {
-    apiKey: process.env.GEMINI_API_KEY ?? "",
+  falAi: {
+    apiKey: process.env.FAL_AI_API_KEY ?? "",
     dailyCapImages: parseInt(process.env.DAILY_IMAGE_CAP ?? "2500", 10),
   },
   admin: {
