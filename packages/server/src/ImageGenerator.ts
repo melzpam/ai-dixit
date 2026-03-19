@@ -1,7 +1,7 @@
 import pLimit from "p-limit";
 
 const MAX_RETRIES = 2;
-const FAL_AI_BASE = "https://fal.ai/api/v1/workflows/fal-ai/flux/schnell";
+const FAL_AI_BASE = "https://fal.run/fal-ai/flux/schnell";
 
 export class ImageGenerator {
   private readonly apiKey: string;
