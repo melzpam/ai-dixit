@@ -15,12 +15,20 @@ import { httpRateLimiter } from "./rateLimiter.js";
 const app = express();
 const httpServer = createServer(app);
 
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
 // Session middleware (shared between Express and Socket.IO)
 const sessionMiddleware = session({
   secret: config.session.secret,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }, // 24h
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' as const : 'lax' as const,
+    maxAge: 24 * 60 * 60 * 1000,
+  },
 });
 
 app.use(cors({ origin: config.cors.origin, credentials: true }));
@@ -48,8 +56,13 @@ const imageGenerator = new ImageGenerator({
 const socketHandler = new SocketHandler(io, imageGenerator);
 
 // Health check
+const startTime = Date.now();
 app.get("/health", (_req, res) => {
-  res.json({ status: "ok" });
+  res.json({
+    status: "ok",
+    env: process.env.NODE_ENV ?? "development",
+    uptime: Math.floor((Date.now() - startTime) / 1000),
+  });
 });
 
 // Admin stats endpoint (basic auth)
@@ -78,6 +91,7 @@ httpServer.listen(config.port, () => {
       event: "server_started",
       port: config.port,
       cors: config.cors.origin,
+      env: process.env.NODE_ENV ?? "development",
     })
   );
 });

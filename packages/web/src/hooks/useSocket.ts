@@ -28,7 +28,7 @@ export function useSocket() {
   useEffect(() => {
     const socket: TypedSocket = io(SERVER_URL, {
       withCredentials: true,
-      transports: ["websocket", "polling"],
+      transports: ["polling", "websocket"],
     });
 
     socketRef.current = socket;
