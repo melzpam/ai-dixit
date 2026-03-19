@@ -34,7 +34,7 @@ export class ImageGenerator {
       return null;
     }
 
-    const styledPrompt = `Dreamy surreal illustration in the style of Dixit board game cards: ${prompt}. Mysterious, poetic, open to interpretation.`;
+    const styledPrompt = `Dreamy surreal illustration in the style of Dixit board game cards: ${prompt}. Mysterious, poetic, open to interpretation. No text, no words, no letters, no writing on the image.`;
     return this.limit(() => this.generateWithRetry(styledPrompt));
   }
 
