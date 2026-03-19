@@ -12,8 +12,16 @@ interface Props {
 }
 
 export function VotingPhase({ state, timerSeconds, onVote }: Props) {
-  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const [votedCardId, setVotedCardId] = useState<string | null>(null);
   const iAmStoryteller = state.myPlayerId === state.storytellerId;
+
+  const hasVoted = state.hasSubmitted || votedCardId !== null;
+
+  function handleCardClick(cardId: string) {
+    if (hasVoted) return;
+    setVotedCardId(cardId);
+    onVote(cardId);
+  }
 
   // Storyteller waits
   if (iAmStoryteller) {
@@ -31,28 +39,30 @@ export function VotingPhase({ state, timerSeconds, onVote }: Props) {
     );
   }
 
-  // Already voted
-  if (state.hasSubmitted) {
+  // After voting — show only the chosen card with glow
+  if (hasVoted) {
+    const chosenId = votedCardId ?? null;
+    const chosenCard = state.cards.find((c) => c.cardId === chosenId);
+
     return (
       <div className="flex flex-col items-center gap-6 py-8">
         <Timer seconds={timerSeconds} />
         <h2 className="text-xl font-semibold text-green-300">Vote submitted!</h2>
-        <p className="text-white/60">Waiting for other players to vote...</p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 w-full max-w-4xl">
-          {state.cards.map((card) => (
-            <Card
-              key={card.cardId}
-              card={card}
-              selected={card.cardId === selectedCardId}
-              disabled
-              zoomOnHover
-            />
-          ))}
-        </div>
+        <p className="text-white/40 text-sm">Waiting for other players...</p>
+
+        {chosenCard && (
+          <div className="relative animate-[fadeInScale_0.5s_ease-out]">
+            <div className="absolute -inset-4 bg-gradient-to-r from-amber-500/30 via-purple-500/20 to-amber-500/30 rounded-2xl blur-xl animate-pulse" />
+            <div className="relative w-48 h-64">
+              <Card card={chosenCard} selected disabled />
+            </div>
+          </div>
+        )}
       </div>
     );
   }
 
+  // Active voting
   return (
     <div className="flex flex-col items-center gap-6 py-8">
       <Timer seconds={timerSeconds} />
@@ -69,21 +79,11 @@ export function VotingPhase({ state, timerSeconds, onVote }: Props) {
           <Card
             key={card.cardId}
             card={card}
-            selected={card.cardId === selectedCardId}
-            onClick={() => setSelectedCardId(card.cardId)}
+            onClick={() => handleCardClick(card.cardId)}
             zoomOnHover
           />
         ))}
       </div>
-
-      {selectedCardId && (
-        <button
-          onClick={() => onVote(selectedCardId)}
-          className="px-8 py-3 bg-amber-600 hover:bg-amber-500 rounded-lg font-bold text-lg transition-colors shadow-lg shadow-amber-600/20"
-        >
-          Confirm Vote
-        </button>
-      )}
     </div>
   );
 }
