@@ -2,7 +2,7 @@ import pLimit from "p-limit";
 
 const MAX_RETRIES = 2;
 const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta";
-const MODEL = "imagen-4.0-generate-001";
+const MODEL = "imagen-4.0-fast-generate-001";
 
 export class ImageGenerator {
   private readonly apiKey: string;
