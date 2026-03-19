@@ -9,7 +9,7 @@
  *   DRAWING (all generate AI cards, 60s)
  *       │ all_ready OR timer
  *       ▼
- *   VOTING (guess storyteller's card, 15s)
+ *   VOTING (guess storyteller's card, 30s)
  *       │ all_voted OR timer
  *       ▼
  *   REVEAL (show who drew what + scores, 10s)
@@ -106,7 +106,7 @@ export const PHASE_DURATIONS: Record<GamePhase, number> = {
   waiting: 0,
   association: 30,
   drawing: 60,
-  voting: 15,
+  voting: 30,
   reveal: 10,
 };
 

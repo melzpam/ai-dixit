@@ -24,7 +24,7 @@ export function VotingPhase({ state, timerSeconds, onVote }: Props) {
         <p className="text-white/60">Wait for everyone to guess which card is yours.</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 w-full max-w-4xl">
           {state.cards.map((card) => (
-            <Card key={card.cardId} card={card} disabled />
+            <Card key={card.cardId} card={card} disabled zoomOnHover />
           ))}
         </div>
       </div>
@@ -45,6 +45,7 @@ export function VotingPhase({ state, timerSeconds, onVote }: Props) {
               card={card}
               selected={card.cardId === selectedCardId}
               disabled
+              zoomOnHover
             />
           ))}
         </div>
@@ -70,6 +71,7 @@ export function VotingPhase({ state, timerSeconds, onVote }: Props) {
             card={card}
             selected={card.cardId === selectedCardId}
             onClick={() => setSelectedCardId(card.cardId)}
+            zoomOnHover
           />
         ))}
       </div>
