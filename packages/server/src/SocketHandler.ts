@@ -78,6 +78,16 @@ export class SocketHandler {
 
       const room = this.gameManager.joinPlayer(playerId, nickname);
 
+      console.log(
+        JSON.stringify({
+          event: "player_joined",
+          playerId,
+          nickname,
+          roomId: room.roomId,
+          socketId: socket.id,
+        })
+      );
+
       // Join Socket.IO room for room-level broadcasting
       socket.join(room.roomId);
 
