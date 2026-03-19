@@ -136,6 +136,16 @@ export class SocketHandler {
         return;
       }
 
+      const player = room.getPlayer(playerId);
+      console.log(
+        JSON.stringify({
+          event: "prompt_submitted",
+          playerId,
+          nickname: player?.nickname,
+          prompt,
+        })
+      );
+
       const canGenerate = room.submitPrompt(playerId, prompt);
       if (!canGenerate) {
         socket.emit("game:error", {

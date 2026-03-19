@@ -35,7 +35,8 @@ export class ImageGenerator {
       return null;
     }
 
-    return this.limit(() => this.generateWithRetry(prompt));
+    const styledPrompt = `Dreamy surreal illustration in the style of Dixit board game cards: ${prompt}. Mysterious, poetic, open to interpretation.`;
+    return this.limit(() => this.generateWithRetry(styledPrompt));
   }
 
   /** Current daily generation count */
@@ -73,7 +74,7 @@ export class ImageGenerator {
             instances: [{ prompt }],
             parameters: {
               sampleCount: 1,
-              aspectRatio: "1:1",
+              aspectRatio: "3:4",
             },
           }),
         });

@@ -43,7 +43,7 @@ export function DrawingPhase({
       </p>
 
       {/* Card preview area */}
-      <div className="w-64 h-64 rounded-xl overflow-hidden bg-white/5 border border-white/10">
+      <div className="w-48 h-64 rounded-xl overflow-hidden bg-white/5 border border-white/10">
         {imageLoading ? (
           <div className="w-full h-full flex flex-col items-center justify-center gap-3">
             <div className="w-10 h-10 rounded-full border-4 border-purple-400/30 border-t-purple-400 animate-spin" />

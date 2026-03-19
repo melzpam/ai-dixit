@@ -24,7 +24,7 @@ export function Card({ card, onClick, selected, disabled, showOwner }: CardProps
           ? "ring-3 ring-amber-400 scale-105 shadow-lg shadow-amber-400/20"
           : ""
       }`}
-      style={{ aspectRatio: "1/1", width: "100%" }}
+      style={{ aspectRatio: "3/4", width: "100%" }}
     >
       {card.imageBase64 ? (
         <img
